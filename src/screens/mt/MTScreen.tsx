@@ -1,0 +1,53 @@
+import { SafeAreaView, Text, View } from "react-native";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import { StackNavigationProp } from "@react-navigation/stack";
+
+import { MTTransactionsScreen } from "./tabs";
+
+import { MainNavigationParams } from "../../navigators/MainNavigation";
+import { IS_ANDROID } from "../../utils";
+
+const TopTab = createMaterialTopTabNavigator();
+
+type TopTabNavigationParams = {
+    MTTransactions: undefined,
+}
+
+export const MTScreen = () => {
+    const { t } = useTranslation();
+    const navigation = useNavigation<StackNavigationProp<MainNavigationParams>>();
+
+    return (
+        <SafeAreaView className="flex-1 ml-2 mr-2">
+            <View className={`flex-row justify-center items-center p-4 ${IS_ANDROID && 'mt-8'}`}>
+                <View><Text className="text-green-900 text-xl font-bold">MT (Merchant Transaction)</Text></View>
+            </View>
+            <TopTab.Navigator
+                initialRouteName='MTTransactions'
+                backBehavior='none'
+                screenOptions={{
+                    tabBarIndicatorStyle: {
+                        backgroundColor: '#58966F',
+                        height: 10,
+                        borderTopLeftRadius: 10,
+                        borderTopRightRadius: 10,
+                        borderBottomWidth: 0,
+                        borderBottomColor: 'transparent'
+                    }
+                }}
+            >
+                <TopTab.Screen
+                    name='MTTransactions'
+                    component={MTTransactionsScreen}
+                    options={{
+                        tabBarLabel: ({ focused }) => {
+                            return <Text className={`text-sm font-bold ${focused ? 'text-green-800' : 'opacity-50'}`}>{t('mt.mtTab.tabName')}</Text>
+                        },
+                    }}
+                />
+            </TopTab.Navigator>
+        </SafeAreaView>
+    );
+}
